@@ -1,5 +1,6 @@
 Class = require 'lib.class'
 push = require 'lib.push'
+Timer = require 'lib.knife.timer'
 
 -- src
 require 'src.constants'
@@ -9,6 +10,11 @@ require 'src.StateStack'
 require 'src.states.BaseState'
 require 'src.states.StartState'
 require 'src.states.PlayState'
+require 'src.states.FadeInState'
+require 'src.states.FadeOutState'
+
+-- GUIs
+require 'src.GUIs.Panel'
 
 
 --[[

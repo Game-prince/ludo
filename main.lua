@@ -26,6 +26,10 @@ function love.load()
 
   -- stores keyboard inputs
   love.keyboard.keyPressed = {}
+
+  -- stores mouse inputs
+  love.mouse.keyPressed = {}
+  love.mouse.keyReleased = {}
 end
 
 --[[
@@ -50,10 +54,13 @@ end
   updates on each frame
 ]]
 function love.update(dt)
+  Timer.update(dt)
   gStateStack:update(dt)
 
-  -- clearing the keypressed table on each frame
+  -- clearing the keyboard and mouse inputs on each frame
   love.keyboard.keyPressed = {}
+  love.mouse.keyPressed = {}
+  love.mouse.keyReleased = {}
 end
 
 --[[
@@ -68,8 +75,36 @@ function love.keypressed(key)
 end
 
 --[[
+  Gets Mouse pressed input
+]]
+function love.mousepressed(key)
+  love.mouse.keyPressed[key] = true
+end
+
+--[[
+  Gets mouse released input
+]]
+function love.mousereleased(key)
+  love.mouse.keyReleased[key] = true
+end
+
+--[[
   function to return if the key was pressed or not
 ]]
 function love.keyboard.wasPressed(key)
   return love.keyboard.keyPressed[key]
+end
+
+--[[
+  Function to return if the mouse key was pressed or not
+]]
+function love.mouse.wasPressed(key)
+  return love.mouse.keyPressed[key]
+end
+
+--[[
+  Function to return if the mousse key was released or not
+]]
+function love.mouse.wasReleased(key)
+  return love.mouse.keyReleased[key]
 end
