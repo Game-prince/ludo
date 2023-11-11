@@ -1,0 +1,8 @@
+--[[
+  mobile screen ratio = 9 : 16
+]]
+WINDOW_WIDTH = 450
+WINDOW_HEIGHT = 800
+
+VIRTUAL_WIDTH = 450
+VIRTUAL_HEIGHT = 800
