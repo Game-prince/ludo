@@ -106,6 +106,13 @@ function Board:init()
       { NO_CELL },
       { NO_CELL }, { NO_CELL }, { NO_CELL }, { NO_CELL }, { NO_CELL }, { BLUE, DICEAREA }, { BLUE, SHOWAREA } },
   }
+
+  self.diceAreas = {
+    [RED] = { self.x + CELL_SIZE, self.y - CELL_SIZE },
+    [GREEN] = { self.x + self.width - 3 * CELL_SIZE, self.y - CELL_SIZE },
+    [BLUE] = { self.x + self.width - 3 * CELL_SIZE, self.y + self.height },
+    [YELLOW] = { self.x + CELL_SIZE, self.y + self.height }
+  }
 end
 
 function Board:render()
@@ -121,26 +128,20 @@ function Board:render()
   end
 
   -- rendering half coloured cells
-  local corners = { { 6, 7, RED, GREEN }, { 8, 7, GREEN, BLUE }, { 8, 9, YELLOW, BLUE }, { 6, 9, RED, YELLOW } }
+  local corners = { { 6, 7, 6, 10, RED }, { 6, 7, 9, 7, GREEN }, { 9, 7, 9, 10, BLUE }, { 9, 10, 6, 10, YELLOW } }
 
   for i, corner in ipairs(corners) do
-    local x, y = corner[1], corner[2]
+    local x1, y1, x2, y2 = corner[1], corner[2], corner[3], corner[4]
 
-    -- first half
-    love.graphics.setColor(COLORS[corner[3]])
-    love.graphics.polygon("fill", self.x + x * CELL_SIZE, self.y + y * CELL_SIZE, self.x + (x + 1) * CELL_SIZE,
-      self.y + (y + 1) * CELL_SIZE, self.x + x * CELL_SIZE, self.y + (y + 1) * CELL_SIZE)
-
-    -- second half
-    love.graphics.setColor(COLORS[corner[4]])
-    love.graphics.polygon("fill", self.x + x * CELL_SIZE, self.y + y * CELL_SIZE, self.x + (x + 1) * CELL_SIZE,
-      self.y + y * CELL_SIZE, self.x + (x + 1) * CELL_SIZE, self.y + (y + 1) * CELL_SIZE)
+    love.graphics.setColor(COLORS[corner[5]])
+    love.graphics.polygon("fill", self.x + x1 * CELL_SIZE, self.y + y1 * CELL_SIZE, self.x + x2 * CELL_SIZE,
+      self.y + y2 * CELL_SIZE, self.x + 7.5 * CELL_SIZE, self.y + 8.5 * CELL_SIZE)
   end
 end
 
 function Board:renderCell(x, y, properties)
-  local r, g, b = 1, 1, 1
   local isSitting = false
+  local isDiceArea = false
 
   for i = 1, #properties do
     -- no cell
@@ -148,29 +149,27 @@ function Board:renderCell(x, y, properties)
       return
     end
 
-    -- setting cell color
-    if properties[i] == EMPTY then
-      r, g, b = 1, 1, 1
-    elseif properties[i] == RED then
-      r, g, b = 1, 0, 0
-    elseif properties[i] == GREEN then
-      r, g, b = 0, 1, 0
-    elseif properties[i] == BLUE then
-      r, g, b = 0, 0, 1
-    elseif properties[i] == YELLOW then
-      r, g, b = 1, 1, 0
-    end
-
     -- setting sitting
     if properties[i] == SITTING then
       isSitting = true
+    elseif properties[i] == DICEAREA then
+      isDiceArea = true
     end
   end
   -- draw a cell
-  love.graphics.setColor(r, g, b, 1)
+  love.graphics.setColor(COLORS[properties[1]])
   love.graphics.rectangle("fill", self.x + (x - 1) * CELL_SIZE, self.y + (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("line", self.x + (x - 1) * CELL_SIZE, self.y + (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+
+  -- Drawing dice area a little bigger than the rest
+  if isDiceArea then
+    local xPos = x == 2 and self.x + (x - 1) * CELL_SIZE or self.x + (x - 2) * CELL_SIZE
+    local yPos = y == 1 and self.y - CELL_SIZE or self.y + (y - 1) * CELL_SIZE
+
+    love.graphics.setColor(COLORS[properties[1]])
+    love.graphics.rectangle("fill", xPos, yPos, 2 * CELL_SIZE, 2 * CELL_SIZE)
+  end
 
   -- draw sitting
   if isSitting then

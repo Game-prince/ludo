@@ -22,7 +22,7 @@ function StartState:render()
   love.graphics.setFont(gFonts['large'])
   love.graphics.printf("Family Ludo", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
 
-  self.panel:render()
+  -- self.panel:render()
 end
 
 function StartState:update(dt)

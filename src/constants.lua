@@ -32,3 +32,5 @@ COLORS = {
   [EMPTY] = { 1, 1, 1, 1 },
   [NO_CELL] = { 0, 0, 0, 0 }
 }
+
+DICE_SIZE = 51
