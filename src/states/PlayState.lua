@@ -7,10 +7,12 @@
 ]]
 PlayState = Class { __includes = BaseState }
 
-function PlayState:init() end
+function PlayState:init()
+  self.board = Board()
+end
 
 function PlayState:update(dt) end
 
 function PlayState:render()
-  love.graphics.printf("Play state", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
+  self.board:render()
 end

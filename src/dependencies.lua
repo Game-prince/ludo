@@ -5,6 +5,7 @@ Timer = require 'lib.knife.timer'
 -- src
 require 'src.constants'
 require 'src.StateStack'
+require 'src.Board'
 
 -- states
 require 'src.states.BaseState'
