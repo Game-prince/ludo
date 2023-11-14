@@ -11,7 +11,7 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
 
   -- randomization
-  love.math.setRandomSeed(os.time())
+  math.randomseed(os.time())
 
   -- creating the actual window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -77,14 +77,14 @@ end
 --[[
   Gets Mouse pressed input
 ]]
-function love.mousepressed(key)
+function love.mousepressed(x, y, key)
   love.mouse.keyPressed[key] = true
 end
 
 --[[
   Gets mouse released input
 ]]
-function love.mousereleased(key)
+function love.mousereleased(x, y, key)
   love.mouse.keyReleased[key] = true
 end
 

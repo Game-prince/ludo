@@ -3,13 +3,17 @@ Dice = Class {}
 function Dice:init(x, y)
   self.x = x
   self.y = y
+
+  -- dice value
   self.value = nil
-  self.value = self:roll()
+  self:roll()
 end
 
 function Dice:render()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.rectangle("fill", self.x, self.y, DICE_SIZE, DICE_SIZE)
+
+  self.value = math.floor(self.value)
 
   local dots = {}
   if self.value == 1 then
@@ -26,17 +30,23 @@ function Dice:render()
     dots = { 1, 4, 7, 3, 6, 9 }
   end
 
-  love.graphics.setColor(1, 0, 1, 1)
-  for i, dot in ipairs(dots) do
-    local x, y = math.modf(dot / 3)
-    y = math.floor(y * 3)
-    love.graphics.circle("fill", self.x + x * DICE_SIZE + DICE_SIZE / 2, self.y + (y - 1) * DICE_SIZE + DICE_SIZE / 2, 8)
-  end
+  local boxSize = DICE_SIZE / 3
 
-  love.graphics.printf(tostring(self.value), 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
+  love.graphics.setColor(0, 0, 0, 1)
+  for i, dot in ipairs(dots) do
+    local y, x = math.modf((dot - 1) / 3)
+    x = math.ceil(x * 3)
+    love.graphics.circle("fill", self.x + x * boxSize + boxSize / 2, self.y + y * boxSize + boxSize / 2,
+      6)
+  end
 end
 
 function Dice:roll()
-  local value = math.random(1, 6)
-  return value
+  self.value = 1
+
+  Timer.tween(0.5, {
+    [self] = { value = 6 }
+  }):finish(function()
+    self.value = math.random(1, 6)
+  end)
 end
