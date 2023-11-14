@@ -1,12 +1,6 @@
 Board = Class {}
 
 function Board:init()
-  self.width = COL_COUNT * CELL_SIZE
-  self.height = ROW_COUNT * CELL_SIZE
-  self.x = (VIRTUAL_WIDTH - self.width) / 2
-  self.y = (VIRTUAL_HEIGHT - self.height) / 2
-
-
   -- actual board
   self.board = {
     -- ROW 0
@@ -120,17 +114,17 @@ function Board:init()
   }
 
   self.diceAreas = {
-    [RED] = { self.x + CELL_SIZE, self.y - CELL_SIZE },
-    [GREEN] = { self.x + self.width - 3 * CELL_SIZE, self.y - CELL_SIZE },
-    [YELLOW] = { self.x + self.width - 3 * CELL_SIZE, self.y + self.height - CELL_SIZE },
-    [BLUE] = { self.x + CELL_SIZE, self.y + self.height - CELL_SIZE }
+    [RED] = { BOARD_X + CELL_SIZE, BOARD_Y - CELL_SIZE },
+    [GREEN] = { BOARD_X + BOARD_WIDTH - 3 * CELL_SIZE, BOARD_Y - CELL_SIZE },
+    [YELLOW] = { BOARD_X + BOARD_WIDTH - 3 * CELL_SIZE, BOARD_Y + BOARD_HEIGHT - CELL_SIZE },
+    [BLUE] = { BOARD_X + CELL_SIZE, BOARD_Y + BOARD_HEIGHT - CELL_SIZE }
   }
 
   self.showAreas = {
-    [RED] = { self.x, self.y + CELL_SIZE },
-    [GREEN] = { self.x + self.width - 6 * CELL_SIZE, self.y + CELL_SIZE },
-    [YELLOW] = { self.x + self.width - 6 * CELL_SIZE, self.y + self.height - 7 * CELL_SIZE },
-    [BLUE] = { self.x, self.y + self.height - 7 * CELL_SIZE }
+    [RED] = { BOARD_X, BOARD_Y + CELL_SIZE },
+    [GREEN] = { BOARD_X + BOARD_WIDTH - 6 * CELL_SIZE, BOARD_Y + CELL_SIZE },
+    [BLUE] = { BOARD_X + BOARD_WIDTH - 6 * CELL_SIZE, BOARD_Y + BOARD_HEIGHT - 7 * CELL_SIZE },
+    [YELLOW] = { BOARD_X, BOARD_Y + BOARD_HEIGHT - 7 * CELL_SIZE }
   }
 end
 
@@ -144,7 +138,7 @@ function Board:render()
 
   -- redering win areas
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures['winArea'], self.x + 6 * CELL_SIZE, self.y + 7 * CELL_SIZE)
+  love.graphics.draw(gTextures['winArea'], BOARD_X + 6 * CELL_SIZE, BOARD_Y + 7 * CELL_SIZE)
 
   -- rendering show areas
   love.graphics.setColor(1, 1, 1, 1)
@@ -176,13 +170,13 @@ function Board:renderCell(x, y, properties)
   end
   -- draw a cell
   love.graphics.setColor(COLORS[properties[1]])
-  love.graphics.draw(gTextures['cells'], gQuads['cells'][properties[1]], self.x + (x - 1) * CELL_SIZE,
-    self.y + (y - 1) * CELL_SIZE)
+  love.graphics.draw(gTextures['cells'], gQuads['cells'][properties[1]], BOARD_X + (x - 1) * CELL_SIZE,
+    BOARD_Y + (y - 1) * CELL_SIZE)
 
   -- Drawing dice area a little bigger than the rest
   if isDiceArea then
-    local xPos = x == 2 and self.x + (x - 1) * CELL_SIZE or self.x + (x - 2) * CELL_SIZE
-    local yPos = y == 1 and self.y - CELL_SIZE or self.y + (y - 1) * CELL_SIZE
+    local xPos = x == 2 and BOARD_X + (x - 1) * CELL_SIZE or BOARD_X + (x - 2) * CELL_SIZE
+    local yPos = y == 1 and BOARD_Y - CELL_SIZE or BOARD_Y + (y - 1) * CELL_SIZE
 
     love.graphics.setColor(COLORS[properties[1]])
     love.graphics.rectangle("fill", xPos, yPos, 2 * CELL_SIZE, 2 * CELL_SIZE)
@@ -190,7 +184,7 @@ function Board:renderCell(x, y, properties)
 
   -- draw sitting
   if isSitting then
-    love.graphics.draw(gTextures['stars'], gQuads['stars'][5], self.x + (x - 1) * CELL_SIZE,
-      self.y + (y - 1) * CELL_SIZE)
+    love.graphics.draw(gTextures['stars'], gQuads['stars'][5], BOARD_X + (x - 1) * CELL_SIZE,
+      BOARD_Y + (y - 1) * CELL_SIZE)
   end
 end

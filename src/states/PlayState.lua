@@ -9,9 +9,10 @@ PlayState = Class { __includes = BaseState }
 
 function PlayState:init()
   self.board = Board()
-  self.players = { RED, GREEN, YELLOW, BLUE }
+  self.player_colors = { RED, GREEN, YELLOW, BLUE }
+  self.players = { Player(RED), Player(GREEN), Player(YELLOW), Player(BLUE) }
   self.turn = 1
-  self.dicePosition = self.board.diceAreas[self.players[self.turn]]
+  self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
   self.dice = Dice(self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2,
     self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2)
 end
@@ -28,12 +29,16 @@ end
 function PlayState:render()
   self.board:render()
   self.dice:render()
+
+  for _, player in pairs(self.players) do
+    player:render()
+  end
 end
 
 function PlayState:rollDice()
   self.dice:roll(function()
     self.turn = self.turn == 4 and 1 or self.turn + 1
-    self.dicePosition = self.board.diceAreas[self.players[self.turn]]
+    self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
     self.dice.x = self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2
     self.dice.y = self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2
   end)
