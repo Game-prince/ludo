@@ -108,3 +108,15 @@ end
 function love.mouse.wasReleased(key)
   return love.mouse.keyReleased[key]
 end
+
+--[[
+  Function to get the dice position
+]]
+function love.mouse.getExactPosition()
+  local x, y = love.mouse.getPosition()
+
+  x = x * (VIRTUAL_WIDTH / WINDOW_WIDTH)
+  y = y * (VIRTUAL_HEIGHT / WINDOW_HEIGHT)
+
+  return x, y
+end
