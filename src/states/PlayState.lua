@@ -15,12 +15,18 @@ function PlayState:init()
   self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
   self.dice = Dice(self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2,
     self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2)
+
+  self.players[self.turn].canRoll = true
 end
 
 function PlayState:update(dt)
+  for _, player in pairs(self.players) do
+    player:update(dt)
+  end
+
   if love.mouse.wasPressed(1) then
     local x, y = love.mouse.getExactPosition()
-    if x >= self.dice.x and x <= self.dice.x + DICE_SIZE and y >= self.dice.y and y <= self.dice.y + DICE_SIZE then
+    if self.players[self.turn].canRoll and x >= self.dice.x and x <= self.dice.x + DICE_SIZE and y >= self.dice.y and y <= self.dice.y + DICE_SIZE then
       self:rollDice()
     end
   end
@@ -36,10 +42,11 @@ function PlayState:render()
 end
 
 function PlayState:rollDice()
-  self.dice:roll(function()
-    self.turn = self.turn == 4 and 1 or self.turn + 1
-    self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
-    self.dice.x = self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2
-    self.dice.y = self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2
-  end)
+  self.dice:roll()
+
+  local currentPlayer = self.players[self.turn]
+  currentPlayer.canRoll = false
+  currentPlayer.canMove = true
+
+  currentPlayer:allowMove(self.dice.value)
 end

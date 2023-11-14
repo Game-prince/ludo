@@ -5,8 +5,7 @@ function Dice:init(x, y)
   self.y = y
 
   -- dice value
-  self.value = nil
-  self:roll()
+  self.value = math.random(1, 6)
 end
 
 function Dice:render()

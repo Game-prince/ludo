@@ -7,8 +7,6 @@ WINDOW_HEIGHT = 800
 VIRTUAL_WIDTH = 9 * 170
 VIRTUAL_HEIGHT = 16 * 170
 
-
-
 SITTING = 0
 RED = 1
 GREEN = 2
@@ -44,8 +42,8 @@ GOTI_WIDTH = 100
 GOTI_HEIGHT = 150
 
 CORNERS = {
-  [RED] = { 1, 2 },
-  [GREEN] = { 10, 2 },
-  [YELLOW] = { 10, 11 },
-  [BLUE] = { 1, 11 }
+  [RED] = { 2, 1 },
+  [GREEN] = { 2, 10 },
+  [YELLOW] = { 11, 10 },
+  [BLUE] = { 11, 1 }
 }
