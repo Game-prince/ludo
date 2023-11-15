@@ -81,3 +81,21 @@ function Goti:nextCell(x, y)
 
   return x, y
 end
+
+function Goti:canTakeSteps(diceValue)
+  local x, y = self.x, self.y
+  local nextX, nextY = x, y
+
+  for i = 1, diceValue do
+    nextX, nextY = self:nextCell(x, y)
+
+    if nextX == x and nextY == y then
+      return false
+    end
+
+    x = nextX
+    y = nextY
+  end
+
+  return true
+end

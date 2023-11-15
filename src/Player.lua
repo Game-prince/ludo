@@ -28,11 +28,19 @@ function Player:update(dt)
 end
 
 function Player:allowMove(diceValue)
+  local canMove = false
+
   for _, goti in pairs(self.gotis) do
     if not goti.dead then
-
+      if goti:canTakeSteps(diceValue) then
+        canMove = true
+        goti.canMove = true
+      end
     elseif goti.dead and diceValue == 6 then
       goti.canMove = true
+      canMove = true
     end
   end
+
+  return canMove
 end
