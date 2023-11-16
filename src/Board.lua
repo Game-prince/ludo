@@ -113,6 +113,9 @@ function Board:init()
       { NO_CELL }, { NO_CELL }, { NO_CELL }, { NO_CELL }, { NO_CELL }, { YELLOW, DICEAREA }, { YELLOW, SHOWAREA } },
   }
 
+  -- actual board
+  self.board2 = {}
+
   self.diceAreas = {
     [RED] = { BOARD_X + CELL_SIZE, BOARD_Y - CELL_SIZE },
     [GREEN] = { BOARD_X + BOARD_WIDTH - 3 * CELL_SIZE, BOARD_Y - CELL_SIZE },
@@ -186,5 +189,28 @@ function Board:renderCell(x, y, properties)
   if isSitting then
     love.graphics.draw(gTextures['stars'], gQuads['stars'][5], BOARD_X + (x - 1) * CELL_SIZE,
       BOARD_Y + (y - 1) * CELL_SIZE)
+  end
+end
+
+function Board:createBoard()
+  local rows = 15
+  local cols = 15
+
+  for y = 1, rows do
+    self.board[y] = {}
+    for x = 1, cols do
+      self.board[y][x] = {}
+    end
+  end
+
+  -- creating show areas
+  for color, corner in pairs(CORNERS) do
+    for i = 0, 5 do
+      for j = 0, 5 do
+        self.board[corner[1] + i][corner[2] + j] = Cell({
+          row = corner[1] + i, col = corner[2] + j, color = color, type = SHOWAREA
+        })
+      end
+    end
   end
 end

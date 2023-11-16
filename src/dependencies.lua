@@ -10,6 +10,7 @@ require 'src.Dice'
 require 'src.Util'
 require 'src.Goti'
 require 'src.Player'
+require 'src.Cell'
 
 -- states
 require 'src.states.BaseState'

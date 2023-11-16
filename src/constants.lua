@@ -7,6 +7,19 @@ WINDOW_HEIGHT = 800
 VIRTUAL_WIDTH = 9 * 170
 VIRTUAL_HEIGHT = 16 * 170
 
+CELL_TYPES = {
+  ["normal"] = 1,
+  ["sitting"] = 2,
+  ["home"] = 3
+}
+
+SUIT_TYPES = {
+  ["red"] = 1,
+  ["green"] = 2,
+  ["yellow"] = 3,
+  ["blue"] = 4
+}
+
 SITTING = 0
 RED = 1
 GREEN = 2
