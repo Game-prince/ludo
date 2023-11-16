@@ -11,6 +11,7 @@ require 'src.Util'
 require 'src.Goti'
 require 'src.Player'
 require 'src.Cell'
+require 'src.Suit'
 
 -- states
 require 'src.states.BaseState'

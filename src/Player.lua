@@ -1,28 +1,26 @@
 Player = Class {}
 
-function Player:init(color)
-  self.color = color
+function Player:init(suit)
+  self.suit = suit
   self.canMove = false
   self.canRoll = false
 
-  self.corner = CORNERS[self.color]
-
-  self.gotis = {
-    Goti(self.corner[1] + 1, self.corner[2] + 1, self.color),
-    Goti(self.corner[1] + 4, self.corner[2] + 1, self.color),
-    Goti(self.corner[1] + 4, self.corner[2] + 4, self.color),
-    Goti(self.corner[1] + 1, self.corner[2] + 4, self.color)
-  }
+  -- for _, goti in ipairs(self.gotis) do
+  --   local x, y = goti.col, goti.row
+  --   table.insert(self.suit.board[y][x], goti)
+  -- end
 end
 
 function Player:render()
-  for _, goti in pairs(self.gotis) do
+  for _, goti in pairs(self.suit.gotis) do
     goti:render()
   end
 end
 
 function Player:update(dt)
-  for _, goti in pairs(self.gotis) do
+  self.suit:update(dt)
+
+  for _, goti in pairs(self.suit.gotis) do
     goti:update(dt)
   end
 end
@@ -30,7 +28,7 @@ end
 function Player:allowMove(diceValue)
   local canMove = false
 
-  for _, goti in pairs(self.gotis) do
+  for _, goti in pairs(self.suit.gotis) do
     if not goti.dead then
       if goti:canTakeSteps(diceValue) then
         canMove = true

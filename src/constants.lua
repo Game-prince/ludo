@@ -10,7 +10,8 @@ VIRTUAL_HEIGHT = 16 * 170
 CELL_TYPES = {
   ["normal"] = 1,
   ["sitting"] = 2,
-  ["home"] = 3
+  ["home"] = 3,
+  ["showArea"] = 4
 }
 
 SUIT_TYPES = {

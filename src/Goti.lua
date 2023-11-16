@@ -1,15 +1,6 @@
 Goti = Class {}
 
-function Goti:init(row, col, color)
-  self.defaultRow = row
-  self.defaultCol = col
-
-  self.row = row
-  self.col = col
-
-  self.x = 0
-  self.y = 0
-
+function Goti:init(color)
   self.color = color
 
   self.dead = true
@@ -31,10 +22,6 @@ function Goti:render()
 end
 
 function Goti:update(dt)
-  -- update x and y values
-  self.x = BOARD_X + (self.col - 1) * CELL_SIZE
-  self.y = BOARD_Y + (self.row - 1) * CELL_SIZE
-
   -- blink if can move
   if self.canMove then
     self.scale = self.scale + self.mul * dt
