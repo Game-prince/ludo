@@ -27,11 +27,23 @@ function Cell:render()
       self.y + self.offsetY,
       self.suit.rotation, 1, 1, self.offsetX, self.offsetY)
   elseif self.type == CELL_TYPES["sitting"] then
+    if self.suit.spawnCell[1] == self.col and self.suit.spawnCell[2] == self.row then
+      love.graphics.setColor(COLORS[self.color])
+    end
+
     love.graphics.draw(gTextures['stars'],
       gQuads['stars'][(self.x == self.suit.spawnCell[1] and self.y == self.suit.spawnCell[2]) and self.color or 5],
       self.x + self.offsetX, self.y + self.offsetY,
       self.suit.rotation, 1, 1, self.offsetX, self.offsetY)
   end
+
+  -- debug
+  -- love.graphics.setColor(0, 0, 0, 1)
+  -- love.graphics.setFont(gFonts['large'])
+  -- love.graphics.printf(tostring(self.row) .. " " .. tostring(self.col), self.x + self.offsetX, self.y + self.offsetY,
+  --   CELL_SIZE, "center", self.suit.rotation,
+  --   1,
+  --   1, self.offsetX, self.offsetY)
 end
 
 function Cell:isClicked(x, y)
@@ -40,4 +52,11 @@ function Cell:isClicked(x, y)
   end
 
   return false
+end
+
+function Cell:getPosition()
+  local x = self.x + self.offsetX
+  local y = self.y + self.offsetY
+
+  return x, y
 end

@@ -12,13 +12,13 @@ function Goti:init(color)
 end
 
 function Goti:render()
-  local radius = 30
-  love.graphics.setColor(0.5, 0.5, 0.5, 1)
-  love.graphics.circle("fill", self.x + CELL_SIZE / 2, self.y + GOTI_HEIGHT / 2, radius)
+  -- local radius = 30
+  -- love.graphics.setColor(0.5, 0.5, 0.5, 1)
+  -- love.graphics.circle("fill", self.x + CELL_SIZE / 2, self.y + GOTI_HEIGHT / 2, radius)
 
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], self.x, self.y - GOTI_HEIGHT / 2,
-    0, self.scale, self.scale)
+  -- love.graphics.setColor(1, 1, 1, 1)
+  -- love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], self.x, self.y - GOTI_HEIGHT / 2,
+  --   0, self.scale, self.scale)
 end
 
 function Goti:update(dt)

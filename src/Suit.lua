@@ -6,7 +6,7 @@ function Suit:init(def)
   self.rotation = (def.rotation * math.pi) / 180 or 0
   self.color = def.color
 
-  self.spawnCell = { self.startX + 6, self.startY + 6 }
+  self.spawnCell = { self.startX + 1, self.startY + 6 }
   self.board = {}
   self:createBoard()
 
@@ -17,10 +17,10 @@ function Suit:init(def)
     Goti(self.color),
   }
 
-  -- table.insert(self.board[self.startY + 1][self.startX + 1].gotis, self.gotis[1])
-  -- table.insert(self.board[self.startY + 1][self.startX + 4].gotis, self.gotis[2])
-  -- table.insert(self.board[self.startY + 4][self.startX + 4].gotis, self.gotis[3])
-  -- table.insert(self.board[self.startY + 4][self.startX + 1].gotis, self.gotis[4])
+  table.insert(self.board[2][2].gotis, self.gotis[1])
+  table.insert(self.board[2][5].gotis, self.gotis[2])
+  table.insert(self.board[5][5].gotis, self.gotis[3])
+  table.insert(self.board[5][2].gotis, self.gotis[4])
 end
 
 function Suit:render()
@@ -79,19 +79,17 @@ function Suit:createBoard()
         type = CELL_TYPES["normal"]
       })
 
-      local cell = self.board[y][x]
-
       -- showarea
-      if x >= self.startX and y >= self.startY and x < self.startX + 6 and y < self.startY + 6 then
-        cell.type = CELL_TYPES["showArea"]
+      if x >= 1 and y >= 1 and x <= 6 and y <= 6 then
+        self.board[y][x].type = CELL_TYPES["showArea"]
 
         -- sitting
-      elseif (y == self.startY + 6 and x == self.startX + 1) or (y == self.startY + 8 and x == self.startX + 2) then
-        cell.type = CELL_TYPES['sitting']
+      elseif (y == 7 and x == 2) or (y == 9 and x == 3) then
+        self.board[y][x].type = CELL_TYPES['sitting']
 
         -- home
-      elseif (y == self.startY + 7 and x > self.startX and x < self.startX + 6) then
-        cell.type = CELL_TYPES["home"]
+      elseif (y == 8 and x > 1 and x < 7) then
+        self.board[y][x].type = CELL_TYPES["home"]
       end
     end
   end
