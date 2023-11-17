@@ -11,10 +11,10 @@ function Suit:init(def)
   self:createBoard()
 
   self.gotis = {
-    Goti(self.color),
-    Goti(self.color),
-    Goti(self.color),
-    Goti(self.color),
+    Goti(self.color, self.board[2][2]),
+    Goti(self.color, self.board[2][5]),
+    Goti(self.color, self.board[5][5]),
+    Goti(self.color, self.board[5][2]),
   }
 
   table.insert(self.board[2][2].gotis, self.gotis[1])

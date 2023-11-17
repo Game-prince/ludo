@@ -28,6 +28,11 @@ function Board:render()
   for _, suit in ipairs(self.board2) do
     suit:render()
   end
+
+  -- rendering center peiece
+  local x = BOARD_X + 6 * CELL_SIZE
+  local y = BOARD_Y + 6 * CELL_SIZE
+  love.graphics.draw(gTextures['winArea'], x, y)
 end
 
 function Board:getNextCell(suit, x, y)

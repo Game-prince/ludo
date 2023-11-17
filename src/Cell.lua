@@ -18,6 +18,7 @@ function Cell:init(def)
 end
 
 function Cell:render()
+  -- render cell
   love.graphics.setColor(1, 1, 1, 1)
   if self.type == CELL_TYPES['normal'] then
     love.graphics.draw(gTextures['cells'], gQuads['cells'][5], self.x + self.offsetX, self.y + self.offsetY,
@@ -37,13 +38,10 @@ function Cell:render()
       self.suit.rotation, 1, 1, self.offsetX, self.offsetY)
   end
 
-  -- debug
-  -- love.graphics.setColor(0, 0, 0, 1)
-  -- love.graphics.setFont(gFonts['large'])
-  -- love.graphics.printf(tostring(self.row) .. " " .. tostring(self.col), self.x + self.offsetX, self.y + self.offsetY,
-  --   CELL_SIZE, "center", self.suit.rotation,
-  --   1,
-  --   1, self.offsetX, self.offsetY)
+  -- render goti
+  for _, goti in ipairs(self.gotis) do
+    goti:render()
+  end
 end
 
 function Cell:isClicked(x, y)
