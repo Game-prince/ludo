@@ -5,13 +5,13 @@ Timer = require 'lib.knife.timer'
 -- src
 require 'src.constants'
 require 'src.StateStack'
+require 'src.board_data'
 require 'src.Board'
 require 'src.Dice'
 require 'src.Util'
 require 'src.Goti'
 require 'src.Player'
 require 'src.Cell'
-require 'src.Suit'
 
 -- states
 require 'src.states.BaseState'

@@ -8,69 +8,44 @@
 PlayState = Class { __includes = BaseState }
 
 function PlayState:init()
+  self.board = Board()
   self.players = {
-    Player(Suit({ startX = 1, startY = 1, rotation = 0, color = RED })),
-    Player(Suit({ startX = 16, startY = 1, rotation = 90, color = GREEN })),
-    Player(Suit({ startX = 16, startY = 16, rotation = 180, color = YELLOW })),
-    Player(Suit({ startX = 1, startY = 16, rotation = 270, color = BLUE })),
+    Player { color = RED },
+    Player { color = GREEN },
+    Player { color = BLUE },
+    Player { color = YELLOW }
   }
-
-  self.board = Board({ players = self.players })
-
-
-  -- self.player_colors = { RED, GREEN, YELLOW, BLUE }
-  -- self.players = { Player(RED), Player(GREEN), Player(YELLOW), Player(BLUE) }
   self.turn = 1
-  -- self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
-  -- self.dice = Dice(self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2,
-  --   self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2)
+  self.dice = Dice(DiceData[1].x, DiceData[1].y)
 
-  -- self.players[self.turn].canRoll = true
+  self.players[self.turn].canRoll = true
 end
 
 function PlayState:update(dt)
-  -- updating dice position
-  -- self.dicePosition = self.board.diceAreas[self.player_colors[self.turn]]
-  -- self.dice.x = self.dicePosition[1] + (2 * CELL_SIZE - DICE_SIZE) / 2
-  -- self.dice.y = self.dicePosition[2] + (2 * CELL_SIZE - DICE_SIZE) / 2
-
-  -- updating players
-  for _, player in pairs(self.players) do
+  for _, player in ipairs(self.players) do
     player:update(dt)
   end
+  self.board:update(dt)
 
-  -- if the mouse is clicked
-  -- if love.mouse.wasPressed(1) then
-  --   local x, y = love.mouse.getExactPosition()
-  --   if self.players[self.turn].canRoll and x >= self.dice.x and x <= self.dice.x + DICE_SIZE and y >= self.dice.y and y <= self.dice.y + DICE_SIZE then
-  --     self:rollDice()
-  --   end
-  -- end
+  -- rolling dice
+  if love.mouse.wasPressed(1) then
+    local x, y = love.mouse.getExactPosition()
+
+    if self.players[self.turn].canRoll and x >= DiceData[self.turn].x and x <= DiceData[self.turn].x + DICE_SIZE and y >= DiceData[self.turn].y and y <= DiceData[self.turn].y + DICE_SIZE then
+      self:rollDice()
+    end
+  end
 end
 
 function PlayState:render()
   self.board:render()
-  -- self.dice:render()
-
-  for _, player in pairs(self.players) do
+  self.dice:render()
+  for _, player in ipairs(self.players) do
     player:render()
   end
 end
 
 function PlayState:rollDice()
   self.dice:roll(function()
-    local currentPlayer = self.players[self.turn]
-    currentPlayer.canRoll = false
-    currentPlayer.canMove = true
-
-    local isMoving = currentPlayer:allowMove(self.dice.value)
-
-    if not isMoving then
-      self.turn = self.turn == 4 and 1 or self.turn + 1
-      currentPlayer.canRoll = false
-      currentPlayer.canMove = false
-      currentPlayer = self.players[self.turn]
-      currentPlayer.canRoll = true
-    end
   end)
 end

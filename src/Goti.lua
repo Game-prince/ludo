@@ -1,89 +1,67 @@
 Goti = Class {}
 
-function Goti:init(color, cell)
-  self.color = color
-  self.cell = cell
-
-  self.x = self.cell.x + self.cell.offsetX
-  self.y = self.cell.y + self.cell.offsetY
-
-  self.dead = true
-  self.home = false
+function Goti:init(def)
+  self.color = def.color
+  self.x = def.x
+  self.y = def.y
 
   self.canMove = false
-  self.scale = 1
-  self.mul = .5
-end
-
-function Goti:render()
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], self.x,
-    self.y - GOTI_HEIGHT / 2,
-    self.cell.suit.rotation, self.scale, self.scale, self.cell.offsetX, self.cell.offsetY)
 end
 
 function Goti:update(dt)
-  -- blink if can move
-  if self.canMove then
-    self.scale = self.scale + self.mul * dt
-
-    if (self.scale < 1) then
-      self.mul = .5
-    elseif self.scale > 1.1 then
-      self.mul = -.5
-    end
-  else
-    self.scale = 1
+  if self.isAnimated then
+    -- animate goti
   end
 end
 
+function Goti:render()
+  local x = BOARD_X + (self.x - 1) * CELL_SIZE
+  local y = BOARD_Y + (self.y - 1) * CELL_SIZE
+
+
+
+  -- goti sprite
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], x, y - GOTI_HEIGHT / 2)
+
+  -- goti shadow
+  -- love.graphics.setColor(0, 0, 0, 1)
+  -- love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], x + GOTI_WIDTH / 4, y + GOTI_HEIGHT / 2, 0, 0.5,
+  --   0.5, 0, 0, -1, 0)
+end
+
 function Goti:nextCell(x, y)
-  -- agar goti ghar me hai
-  if self.color == RED and x < 7 and y < 8 then
-    return 2, 7
-  elseif self.color == GREEN and x > 9 and y < 8 then
-    return 9, 2
-  elseif self.color == YELLOW and x > 9 and y > 10 then
-    return 9, 14
-  elseif self.color == BLUE and x < 7 and y > 10 then
-    return 14, 7
-  end
-
-  -- where x is increasing
-  if (y == 8 and x < 16) or (y == 3 and x < 9) or (self.player == RED and y == 9 and x < 7) then
-    x = x + 1
-
-    -- where x is decreasing
-  elseif (y == 10 and x > 1) or (y == 16 and x > 7) or (self.player == YELLOW and y == 9 and x > 9) then
+  -- where x is decreasing
+  if (self.y == 9 and self.x > 1) or (self.y == 15 and self.x > 7) or (self.color == YELLOW and self.y == 8 and self.x < 15 and self.x > 9) then
     x = x - 1
+
+    -- where x is increasing
+  elseif (self.y == 7 and self.x < 15) or (self.y == 1 and self.x < 9) or (self.color == RED and self.y == 8 and self.x > 1 and self.x < 7) then
+    x = x + 1
   end
 
-  -- where y is increasing
-  if (x == 9 and y < 16) or (x == 15 and y < 10) or (self.player == GREEN and x == 8 and y < 8) then
-    y = y + 1
-
-    -- where y is decreasing
-  elseif (x == 7 and y > 2) or (x == 1 and y > 8) or (self.player == BLUE and x == 8 and y > 10) then
+  -- where y is decreasing
+  if (self.x == 1 and self.y > 7) or (self.x == 7 and self.y > 1) or (self.color == BLUE and self.x == 8 and self.y < 15 and self.y > 9) then
     y = y - 1
+
+    -- where y is increasing
+  elseif (self.x == 15 and self.y < 9) or (self.x == 9 and self.y < 15) or (self.color == GREEN and self.x == 8 and self.y > 1 and self.y < 7) then
+    y = y + 1
   end
 
   return x, y
 end
 
-function Goti:canTakeSteps(diceValue)
+function Goti:canMoveUpto(steps)
   local x, y = self.x, self.y
-  local nextX, nextY = x, y
+  local nextX, nextY = nil, nil
 
-  for i = 1, diceValue do
+  for i = 1, steps do
     nextX, nextY = self:nextCell(x, y)
-
     if nextX == x and nextY == y then
       return false
     end
-
-    x = nextX
-    y = nextY
   end
 
-  return true
+  return { nextX, nextY }
 end

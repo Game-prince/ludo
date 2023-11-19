@@ -1,40 +1,55 @@
 Board = Class {}
 
-function Board:init(def)
-  self.players = def.players
-
-  -- actual board
-  self.board2 = {}
-  for _, player in ipairs(self.players) do
-    table.insert(self.board2, player.suit)
-  end
-
-  self.diceAreas = {
-    [RED] = { BOARD_X + CELL_SIZE, BOARD_Y - CELL_SIZE },
-    [GREEN] = { BOARD_X + BOARD_WIDTH - 3 * CELL_SIZE, BOARD_Y - CELL_SIZE },
-    [YELLOW] = { BOARD_X + BOARD_WIDTH - 3 * CELL_SIZE, BOARD_Y + BOARD_HEIGHT - CELL_SIZE },
-    [BLUE] = { BOARD_X + CELL_SIZE, BOARD_Y + BOARD_HEIGHT - CELL_SIZE }
-  }
-
-  self.showAreas = {
-    [RED] = { BOARD_X, BOARD_Y + CELL_SIZE },
-    [GREEN] = { BOARD_X + BOARD_WIDTH - 6 * CELL_SIZE, BOARD_Y + CELL_SIZE },
-    [BLUE] = { BOARD_X + BOARD_WIDTH - 6 * CELL_SIZE, BOARD_Y + BOARD_HEIGHT - 7 * CELL_SIZE },
-    [YELLOW] = { BOARD_X, BOARD_Y + BOARD_HEIGHT - 7 * CELL_SIZE }
-  }
+function Board:init()
+  self.board = {}
+  self:createBoard()
 end
 
 function Board:render()
-  for _, suit in ipairs(self.board2) do
-    suit:render()
+  -- render cells
+  for y = 1, ROW_COUNT do
+    for x = 1, COL_COUNT do
+      self.board[y][x]:render()
+    end
   end
 
-  -- rendering center peiece
-  local x = BOARD_X + 6 * CELL_SIZE
-  local y = BOARD_Y + 6 * CELL_SIZE
-  love.graphics.draw(gTextures['winArea'], x, y)
+  -- render show area
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(gTextures['showAreas'], gQuads['showAreas'][1], BOARD_X, BOARD_Y)
+  love.graphics.draw(gTextures['showAreas'], gQuads['showAreas'][2], BOARD_X + 9 * CELL_SIZE, BOARD_Y)
+  love.graphics.draw(gTextures['showAreas'], gQuads['showAreas'][3], BOARD_X + 9 * CELL_SIZE, BOARD_Y + 9 * CELL_SIZE)
+  love.graphics.draw(gTextures['showAreas'], gQuads['showAreas'][4], BOARD_X, BOARD_Y + 9 * CELL_SIZE)
+
+  -- render win area
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(gTextures['winArea'], BOARD_X + 6 * CELL_SIZE, BOARD_Y + 6 * CELL_SIZE)
+
+  -- render dice area
+  love.graphics.setColor(1, 1, 1, 1)
+  for i = 1, 4 do
+    love.graphics.rectangle('fill', DiceData[i].x, DiceData[i].y, DICE_SIZE, DICE_SIZE)
+  end
 end
 
-function Board:getNextCell(suit, x, y)
-  -- x decreasing
+function Board:update(dt)
+  -- cell update
+  for y = 1, ROW_COUNT do
+    for x = 1, COL_COUNT do
+      self.board[y][x]:update(dt)
+    end
+  end
+end
+
+--[[
+  function to create board using board_data table
+]]
+function Board:createBoard()
+  for y = 1, ROW_COUNT do
+    self.board[y] = {}
+    for x = 1, COL_COUNT do
+      self.board[y][x] = Cell {
+        x = x, y = y, color = BoardData[y][x].color, type = BoardData[y][x].type
+      }
+    end
+  end
 end

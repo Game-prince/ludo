@@ -1,44 +1,37 @@
 Player = Class {}
 
-function Player:init(suit)
-  self.suit = suit
-  self.canMove = false
+function Player:init(def)
+  self.color = def.color
+  self.canPlay = true
   self.canRoll = false
+  self.canMove = false
 
-  -- for _, goti in ipairs(self.gotis) do
-  --   local x, y = goti.col, goti.row
-  --   table.insert(self.suit.board[y][x], goti)
-  -- end
+  self.gotis = {}
+  for i = 1, 4 do
+    table.insert(self.gotis, Goti {
+      color = self.color,
+      x = GotiStartData[self.color][i].x,
+      y = GotiStartData[self.color][i].y
+    })
+  end
 end
 
 function Player:render()
-  for _, goti in pairs(self.suit.gotis) do
+  for _, goti in ipairs(self.gotis) do
     goti:render()
   end
 end
 
 function Player:update(dt)
-  self.suit:update(dt)
-
-  for _, goti in pairs(self.suit.gotis) do
+  for _, goti in ipairs(self.gotis) do
     goti:update(dt)
   end
 end
 
-function Player:allowMove(diceValue)
-  local canMove = false
-
-  for _, goti in pairs(self.suit.gotis) do
-    if not goti.dead then
-      if goti:canTakeSteps(diceValue) then
-        canMove = true
-        goti.canMove = true
-      end
-    elseif goti.dead and diceValue == 6 then
+function Player:whichGotisCanMove()
+  for _, goti in ipairs(self.gotis) do
+    if goti:canMove() then
       goti.canMove = true
-      canMove = true
     end
   end
-
-  return canMove
 end
