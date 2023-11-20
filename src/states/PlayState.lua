@@ -22,10 +22,17 @@ function PlayState:init()
 end
 
 function PlayState:update(dt)
+  -- updating player
   for _, player in ipairs(self.players) do
     player:update(dt)
   end
+
+  -- updating board
   self.board:update(dt)
+
+  -- updating dice
+  self.dice.x = DiceData[self.turn].x
+  self.dice.y = DiceData[self.turn].y
 
   -- rolling dice
   if love.mouse.wasPressed(1) then
@@ -47,5 +54,17 @@ end
 
 function PlayState:rollDice()
   self.dice:roll(function()
+    self.players[self.turn].canRoll = false
+    self.players[self.turn].canMove = true
+    local count = self.players[self.turn]:whichGotisCanMove(self.dice.value)
+    if count == 0 then
+      self.turn = self.turn + 1
+      if self.turn > 4 then
+        self.turn = 1
+      end
+      self.players[self.turn].canRoll = true
+    else
+      self.players[self.turn].canMove = true
+    end
   end)
 end

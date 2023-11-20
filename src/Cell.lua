@@ -21,7 +21,3 @@ function Cell:render()
     love.graphics.draw(gTextures['stars'], gQuads['stars'][5], x, y)
   end
 end
-
-function Cell:update(dt)
-
-end

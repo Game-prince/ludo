@@ -28,10 +28,21 @@ function Player:update(dt)
   end
 end
 
-function Player:whichGotisCanMove()
+function Player:whichGotisCanMove(steps)
+  local count = 0
   for _, goti in ipairs(self.gotis) do
-    if goti:canMove() then
-      goti.canMove = true
+    if not goti.alive then
+      if steps == 6 then
+        goti.canMove = true
+        count = count + 1
+      end
+    else
+      if goti:canMoveUpto(steps) then
+        goti.canMove = true
+        count = count + 1
+      end
     end
   end
+
+  return count
 end

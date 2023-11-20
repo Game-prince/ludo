@@ -53,3 +53,11 @@ function Board:createBoard()
     end
   end
 end
+
+function Board:getClickedCell()
+  if love.mouse.wasPressed(1) then
+    local x, y = love.mouse.getExactPosition()
+  else
+    return false
+  end
+end

@@ -5,12 +5,24 @@ function Goti:init(def)
   self.x = def.x
   self.y = def.y
 
+  self.alive = false
+
   self.canMove = false
+  self.mul = 0.5
+  self.scale = 1
 end
 
 function Goti:update(dt)
-  if self.isAnimated then
-    -- animate goti
+  if self.canMove then
+    self.scale = self.scale + dt * self.mul
+
+    if self.scale > 1.1 then
+      self.mul = -0.5
+    elseif self.scale < 0.9 then
+      self.mul = 0.5
+    end
+  else
+    self.mul = 1
   end
 end
 
@@ -18,11 +30,9 @@ function Goti:render()
   local x = BOARD_X + (self.x - 1) * CELL_SIZE
   local y = BOARD_Y + (self.y - 1) * CELL_SIZE
 
-
-
   -- goti sprite
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], x, y - GOTI_HEIGHT / 2)
+  love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], x, y - GOTI_HEIGHT / 2, 0, self.scale, self.scale)
 
   -- goti shadow
   -- love.graphics.setColor(0, 0, 0, 1)
