@@ -55,9 +55,25 @@ function Board:createBoard()
 end
 
 function Board:getClickedCell()
+  local row, col = -1, -1
   if love.mouse.wasPressed(1) then
     local x, y = love.mouse.getExactPosition()
-  else
-    return false
+
+    if not (x >= BOARD_X and x <= BOARD_X + BOARD_WIDTH and y >= BOARD_Y and y <= BOARD_Y + BOARD_HEIGHT) then
+      return nil
+    end
+
+    col = math.floor((x - BOARD_X) / CELL_SIZE + 1)
+    row = math.floor((y - BOARD_Y) / CELL_SIZE + 1)
+  end
+
+  return self.board[row][col]
+end
+
+function Board:clearCells()
+  for y = 1, ROW_COUNT do
+    for x = 1, COL_COUNT do
+      self.board[y][x].gotis = {}
+    end
   end
 end

@@ -21,3 +21,23 @@ function Cell:render()
     love.graphics.draw(gTextures['stars'], gQuads['stars'][5], x, y)
   end
 end
+
+function Cell:update(dt)
+
+end
+
+function Cell:moveGoti(color, value, callback)
+  local gotis = {}
+
+  for _, goti in ipairs(self.gotis) do
+    if goti.color == color and goti.canMove then
+      table.insert(gotis, goti)
+    end
+  end
+
+  if #gotis == 0 then
+    return false
+  else
+    gotis[1]:move(value, callback)
+  end
+end

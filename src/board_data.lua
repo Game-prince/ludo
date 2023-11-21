@@ -161,3 +161,10 @@ GotiStartData = {
     { x = 2, y = 11 }, { x = 5, y = 11 }, { x = 5, y = 14 }, { x = 2, y = 14 }
   }
 }
+
+GotiBirthHomeData = {
+  [RED] = { x = 2, y = 7 },
+  [GREEN] = { x = 9, y = 2 },
+  [YELLOW] = { x = 14, y = 9 },
+  [BLUE] = { x = 7, y = 14 }
+}

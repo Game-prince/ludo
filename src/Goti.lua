@@ -75,3 +75,32 @@ function Goti:canMoveUpto(steps)
 
   return { nextX, nextY }
 end
+
+function Goti:move(steps, callback)
+  if not self.alive and steps == 6 then
+    self.alive = true
+    self.x = GotiBirthHomeData[self.color].x
+    self.y = GotiBirthHomeData[self.color].y
+    callback()
+    return true
+  end
+
+  local x, y = self.x, self.y
+  local nextX, nextY = nil, nil
+
+  for i = 1, steps do
+    nextX, nextY = self:nextCell(x, y)
+    if nextX == x and nextY == y then
+      return false
+    end
+    x = nextX
+    y = nextY
+  end
+
+  self.x = x
+  self.y = y
+  self.canMove = false
+
+  callback()
+  return true
+end
