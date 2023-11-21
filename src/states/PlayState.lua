@@ -88,7 +88,17 @@ function PlayState:update(dt)
       self.wrongCell = false
       if self.players[self.turn].canMove then
         local cell = self.board.board[row][col]
-        cell:moveGoti(self.players[self.turn].color, self.dice.value)
+
+        cell:moveGoti(self.players[self.turn].color, self.dice.value, function()
+          self.players[self.turn].canMove = false
+          for _, goti in ipairs(self.players[self.turn].gotis) do
+            goti.canMove = false
+          end
+          if not (self.dice.value == 6) then
+            self.turn = self.turn + 1 > 4 and 1 or self.turn + 1
+          end
+          self.players[self.turn].canRoll = true
+        end)
       end
     else
       self.wrongCell = true

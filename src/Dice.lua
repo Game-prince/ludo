@@ -23,8 +23,7 @@ function Dice:roll(callback)
   Timer.tween(0.5, {
     [self] = { value = 6 }
   }):finish(function()
-    -- self.value = math.random(1, 6)
-    self.value = 6
+    self.value = math.random(1, 6)
 
     if callback then
       callback()
