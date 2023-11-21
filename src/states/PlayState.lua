@@ -16,26 +16,55 @@ function PlayState:init()
     Player { color = BLUE },
   }
 
-
-
   self.turn = 1
   self.dice = Dice(DiceData[1].x, DiceData[1].y)
 
   self.players[self.turn].canRoll = true
+
+  self.wrongCell = false
+end
+
+function PlayState:render()
+  self.board:render()
+  self.dice:render()
+  for _, player in ipairs(self.players) do
+    player:render()
+  end
+
+  -- current clicked cell
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setFont(gFonts['huge'])
+  love.graphics.printf("x : " .. self.board.prevX .. "y : " .. self.board.prevY, 0, 50, VIRTUAL_WIDTH, "center")
+
+  -- player turn
+  love.graphics.setFont(gFonts['large'])
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.printf("Player Turn : ", 0, 300, VIRTUAL_WIDTH, "left")
+  love.graphics.setColor(COLORS[self.players[self.turn].color])
+  love.graphics.rectangle("fill", 500, 250, 100, 100)
+
+  -- if clicked on wrong cell
+  love.graphics.setFont(gFonts['large'])
+  love.graphics.setColor(1, 1, 1, 1)
+  if self.wrongCell then
+    love.graphics.printf("invalid cell", 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, "center")
+  else
+    love.graphics.printf("valid cell", 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, "center")
+  end
 end
 
 function PlayState:update(dt)
+  -- updating player
+  for _, player in ipairs(self.players) do
+    player:update(dt)
+  end
+
   -- placing goti data on the cell
   self.board:clearCells()
   for _, player in ipairs(self.players) do
     for _, goti in ipairs(player.gotis) do
-      self.board.board[goti.y][goti.x] = goti
+      table.insert(self.board.board[goti.y][goti.x].gotis, goti)
     end
-  end
-
-  -- updating player
-  for _, player in ipairs(self.players) do
-    player:update(dt)
   end
 
   -- updating board
@@ -48,42 +77,28 @@ function PlayState:update(dt)
   -- rolling dice
   if love.mouse.wasPressed(1) then
     local x, y = love.mouse.getExactPosition()
-    local cell = self.board:getClickedCell()
+    local row, col = self.board:getClickedCell()
 
     -- if clicked on the dice, roll the dice
     if self.players[self.turn].canRoll and x >= DiceData[self.turn].x and x <= DiceData[self.turn].x + DICE_SIZE and y >= DiceData[self.turn].y and y <= DiceData[self.turn].y + DICE_SIZE then
       self:rollDice()
 
       -- if clicked on the cell and can move, move the goti
-    elseif not cell == nil then
+    elseif row >= 1 and row <= ROW_COUNT and col >= 1 and col <= COL_COUNT then
+      self.wrongCell = false
       if self.players[self.turn].canMove then
-        cell:moveGoti(self.players[self.turn].color, self.dice.value, function()
-          self.players[self.turn].canMove = false
-          if not self.dice.value == 6 then
-            self.turn = self.turn + 1
-            if self.turn > 4 then
-              self.turn = 1
-            end
-          end
-          self.players[self.turn].canRoll = true
-        end)
+        local cell = self.board.board[row][col]
+        cell:moveGoti(self.players[self.turn].color, self.dice.value)
       end
+    else
+      self.wrongCell = true
     end
-  end
-end
-
-function PlayState:render()
-  self.board:render()
-  self.dice:render()
-  for _, player in ipairs(self.players) do
-    player:render()
   end
 end
 
 function PlayState:rollDice()
   self.dice:roll(function()
     self.players[self.turn].canRoll = false
-    self.players[self.turn].canMove = true
     local count = self.players[self.turn]:whichGotisCanMove(self.dice.value)
     if count == 0 then
       self.turn = self.turn + 1

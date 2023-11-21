@@ -20,6 +20,11 @@ function Cell:render()
   if self.type == START or self.type == SITTING then
     love.graphics.draw(gTextures['stars'], gQuads['stars'][5], x, y)
   end
+
+  -- print the goti count
+  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.setFont(gFonts['huge'])
+  love.graphics.printf(tostring(#self.gotis), x, y, CELL_SIZE, "center")
 end
 
 function Cell:update(dt)
@@ -27,17 +32,18 @@ function Cell:update(dt)
 end
 
 function Cell:moveGoti(color, value, callback)
-  local gotis = {}
+  local movableGotis = {}
 
   for _, goti in ipairs(self.gotis) do
     if goti.color == color and goti.canMove then
-      table.insert(gotis, goti)
+      table.insert(movableGotis, goti)
     end
   end
 
-  if #gotis == 0 then
+  if #movableGotis == 0 then
     return false
   else
-    gotis[1]:move(value, callback)
+    movableGotis[1]:move(value, callback)
+    return true
   end
 end

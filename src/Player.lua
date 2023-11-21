@@ -8,11 +8,11 @@ function Player:init(def)
 
   self.gotis = {}
   for i = 1, 4 do
-    table.insert(self.gotis, Goti {
+    self.gotis[i] = Goti {
       color = self.color,
       x = GotiStartData[self.color][i].x,
       y = GotiStartData[self.color][i].y
-    })
+    }
   end
 end
 

@@ -8,8 +8,10 @@ function Goti:init(def)
   self.alive = false
 
   self.canMove = false
-  self.mul = 0.5
+  self.mul = 0.2
   self.scale = 1
+
+  self.prevX = self.x
 end
 
 function Goti:update(dt)
@@ -17,9 +19,9 @@ function Goti:update(dt)
     self.scale = self.scale + dt * self.mul
 
     if self.scale > 1.1 then
-      self.mul = -0.5
+      self.mul = -0.2
     elseif self.scale < 0.9 then
-      self.mul = 0.5
+      self.mul = 0.2
     end
   else
     self.mul = 1
@@ -81,7 +83,9 @@ function Goti:move(steps, callback)
     self.alive = true
     self.x = GotiBirthHomeData[self.color].x
     self.y = GotiBirthHomeData[self.color].y
-    callback()
+    if callback then
+      callback()
+    end
     return true
   end
 
@@ -101,6 +105,8 @@ function Goti:move(steps, callback)
   self.y = y
   self.canMove = false
 
-  callback()
+  if callback then
+    callback()
+  end
   return true
 end

@@ -3,6 +3,9 @@ Board = Class {}
 function Board:init()
   self.board = {}
   self:createBoard()
+
+  self.prevX = -1
+  self.prevY = -1
 end
 
 function Board:render()
@@ -12,6 +15,7 @@ function Board:render()
       self.board[y][x]:render()
     end
   end
+
 
   -- render show area
   love.graphics.setColor(1, 1, 1, 1)
@@ -59,15 +63,13 @@ function Board:getClickedCell()
   if love.mouse.wasPressed(1) then
     local x, y = love.mouse.getExactPosition()
 
-    if not (x >= BOARD_X and x <= BOARD_X + BOARD_WIDTH and y >= BOARD_Y and y <= BOARD_Y + BOARD_HEIGHT) then
-      return nil
-    end
-
     col = math.floor((x - BOARD_X) / CELL_SIZE + 1)
     row = math.floor((y - BOARD_Y) / CELL_SIZE + 1)
   end
 
-  return self.board[row][col]
+  self.prevX = col
+  self.prevY = row
+  return row, col
 end
 
 function Board:clearCells()
