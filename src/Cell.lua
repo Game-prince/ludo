@@ -23,18 +23,6 @@ function Cell:render()
 end
 
 function Cell:update(dt)
-  -- finding the goti which is not the same color as the last one
-  if self.type == SITTING or self.type == START then
-    return
-  end
-  local lastGoti = self.gotis[#self.gotis]
-  for _, goti in ipairs(self.gotis) do
-    if not (goti.color == lastGoti.color) then
-      goti.alive = false
-      goti.x = goti.startY
-      goti.y = goti.startY
-    end
-  end
 end
 
 function Cell:moveGoti(color, value, callback)
@@ -51,5 +39,13 @@ function Cell:moveGoti(color, value, callback)
   else
     local newX, newY = movableGotis[1]:move(value, callback)
     return newX, newY
+  end
+end
+
+function Cell:handleGotiKilling(color)
+  for _, goti in ipairs(self.gotis) do
+    if goti.color ~= color then
+      goti:kill()
+    end
   end
 end

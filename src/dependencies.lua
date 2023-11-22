@@ -1,6 +1,7 @@
 Class = require 'lib.class'
 push = require 'lib.push'
 Timer = require 'lib.knife.timer'
+Chain = require 'lib.knife.chain'
 
 -- src
 require 'src.constants'
@@ -22,6 +23,8 @@ require 'src.states.FadeOutState'
 
 -- GUIs
 require 'src.GUIs.Panel'
+require 'src.GUIs.ArrowAnimated'
+require 'src.GUIs.TrailDot'
 
 
 --[[
@@ -44,7 +47,9 @@ gTextures = {
   ['stars'] = love.graphics.newImage("graphics/stars.png"),
   ['winArea'] = love.graphics.newImage("graphics/winArea.png"),
   ['showAreas'] = love.graphics.newImage("graphics/showAreas.png"),
-  ['gotis'] = love.graphics.newImage("graphics/pieces.png")
+  ['gotis'] = love.graphics.newImage("graphics/pieces.png"),
+  ['arrow-left'] = love.graphics.newImage("graphics/arrow-left.png"),
+  ['arrow-right'] = love.graphics.newImage("graphics/arrow-right.png")
 }
 
 gQuads = {

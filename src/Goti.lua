@@ -17,10 +17,25 @@ function Goti:init(def)
   self.actualX = BOARD_X + (self.x - 1) * CELL_SIZE
   self.actualY = BOARD_Y + (self.y - 1) * CELL_SIZE
 
-  self.animationTime = 0.1
+  self.animationTime = 0.2
+
+  self.trailDots = {}
 end
 
 function Goti:update(dt)
+  -- trail dots
+  local trailDotsToRemove = {}
+  for i = #self.trailDots, 1, -1 do
+    if self.trailDots[i].radius >= CELL_SIZE / 2 then
+      table.insert(trailDotsToRemove, i)
+    end
+  end
+
+  for _, i in ipairs(trailDotsToRemove) do
+    table.remove(self.trailDots, i)
+  end
+
+  -- animating gotis
   if self.canMove then
     self.scale = self.scale + dt * self.mul
 
@@ -35,6 +50,11 @@ function Goti:update(dt)
 end
 
 function Goti:render()
+  -- goti trail
+  for _, dot in ipairs(self.trailDots) do
+    dot:render()
+  end
+
   -- goti sprite
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.draw(gTextures['gotis'], gQuads['gotis'][self.color], self.actualX, self.actualY - GOTI_HEIGHT / 2, 0,
@@ -117,6 +137,10 @@ function Goti:move(steps, callback)
   Timer.tween(self.animationTime, {
     [self] = { actualX = BOARD_X + (self.x - 1) * CELL_SIZE, actualY = BOARD_Y + (self.y - 1) * CELL_SIZE }
   }):finish(function()
+    local trailDot = TrailDot {
+      x = self.x, y = self.y, color = COLORS[self.color], animationTime = 0.5
+    }
+    self.trailDots[#self.trailDots + 1] = trailDot
     self:move(steps - 1, callback)
   end)
 
@@ -129,4 +153,11 @@ function Goti:isBetween(a, x, y)
   end
 
   return false
+end
+
+function Goti:kill()
+  self.alive = false
+  self.x, self.y = self.startX, self.startY
+  self.actualX = BOARD_X + (self.x - 1) * CELL_SIZE
+  self.actualY = BOARD_Y + (self.y - 1) * CELL_SIZE
 end
