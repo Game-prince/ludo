@@ -20,15 +20,21 @@ function Cell:render()
   if self.type == START or self.type == SITTING then
     love.graphics.draw(gTextures['stars'], gQuads['stars'][5], x, y)
   end
-
-  -- print the goti count
-  love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.setFont(gFonts['huge'])
-  love.graphics.printf(tostring(#self.gotis), x, y, CELL_SIZE, "center")
 end
 
 function Cell:update(dt)
-
+  -- finding the goti which is not the same color as the last one
+  if self.type == SITTING or self.type == START then
+    return
+  end
+  local lastGoti = self.gotis[#self.gotis]
+  for _, goti in ipairs(self.gotis) do
+    if not (goti.color == lastGoti.color) then
+      goti.alive = false
+      goti.x = goti.startY
+      goti.y = goti.startY
+    end
+  end
 end
 
 function Cell:moveGoti(color, value, callback)
@@ -41,9 +47,9 @@ function Cell:moveGoti(color, value, callback)
   end
 
   if #movableGotis == 0 then
-    return false
+    return self.x, self.y
   else
-    movableGotis[1]:move(value, callback)
-    return true
+    local newX, newY = movableGotis[1]:move(value, callback)
+    return newX, newY
   end
 end

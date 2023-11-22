@@ -20,8 +20,6 @@ function PlayState:init()
   self.dice = Dice(DiceData[1].x, DiceData[1].y)
 
   self.players[self.turn].canRoll = true
-
-  self.wrongCell = false
 end
 
 function PlayState:render()
@@ -31,26 +29,12 @@ function PlayState:render()
     player:render()
   end
 
-  -- current clicked cell
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.setFont(gFonts['huge'])
-  love.graphics.printf("x : " .. self.board.prevX .. "y : " .. self.board.prevY, 0, 50, VIRTUAL_WIDTH, "center")
-
   -- player turn
   love.graphics.setFont(gFonts['large'])
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.printf("Player Turn : ", 0, 300, VIRTUAL_WIDTH, "left")
+  love.graphics.printf("Player Turn : ", 0, 60, VIRTUAL_WIDTH, "left")
   love.graphics.setColor(COLORS[self.players[self.turn].color])
-  love.graphics.rectangle("fill", 500, 250, 100, 100)
-
-  -- if clicked on wrong cell
-  love.graphics.setFont(gFonts['large'])
-  love.graphics.setColor(1, 1, 1, 1)
-  if self.wrongCell then
-    love.graphics.printf("invalid cell", 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, "center")
-  else
-    love.graphics.printf("valid cell", 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, "center")
-  end
+  love.graphics.rectangle("fill", 450, 30, 100, 100)
 end
 
 function PlayState:update(dt)
@@ -89,7 +73,8 @@ function PlayState:update(dt)
       if self.players[self.turn].canMove then
         local cell = self.board.board[row][col]
 
-        cell:moveGoti(self.players[self.turn].color, self.dice.value, function()
+        -- move cell
+        local newX, newY = cell:moveGoti(self.players[self.turn].color, self.dice.value, function()
           self.players[self.turn].canMove = false
           for _, goti in ipairs(self.players[self.turn].gotis) do
             goti.canMove = false

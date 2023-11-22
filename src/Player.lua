@@ -23,6 +23,7 @@ function Player:render()
 end
 
 function Player:update(dt)
+  -- updating gotis
   for _, goti in ipairs(self.gotis) do
     goti:update(dt)
   end

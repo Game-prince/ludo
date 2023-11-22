@@ -5,6 +5,9 @@ function Goti:init(def)
   self.x = def.x
   self.y = def.y
 
+  self.startX = self.x
+  self.startY = self.y
+
   self.alive = false
 
   self.canMove = false
@@ -13,6 +16,8 @@ function Goti:init(def)
 
   self.actualX = BOARD_X + (self.x - 1) * CELL_SIZE
   self.actualY = BOARD_Y + (self.y - 1) * CELL_SIZE
+
+  self.animationTime = 0.1
 end
 
 function Goti:update(dt)
@@ -89,44 +94,33 @@ function Goti:canMoveUpto(steps)
 end
 
 function Goti:move(steps, callback)
+  if steps == 0 then
+    callback()
+    return self.x, self.y
+  end
+
   -- if the goti is not alive and step is 6
   if not self.alive and steps == 6 then
     self.alive = true
     self.x, self.y = GotiBirthHomeData[self.color].x, GotiBirthHomeData[self.color].y
-    Timer.tween(0.5, {
+    Timer.tween(self.animationTime, {
       [self] = { actualX = BOARD_X + (self.x - 1) * CELL_SIZE, actualY = BOARD_Y + (self.y - 1) * CELL_SIZE }
     }):finish(function()
       if callback then
         callback()
       end
     end)
-    return true
+    return self.x, self.y
   end
 
-  -- if the goti is already alive
-  local x, y = self.x, self.y
-  local nextX, nextY = nil, nil
-
-  for i = 1, steps do
-    nextX, nextY = self:nextCell(x, y)
-    if nextX == x and nextY == y then
-      return false
-    end
-    x = nextX
-    y = nextY
-  end
-
-  self.x = x
-  self.y = y
-  Timer.tween(0.5, {
+  self.x, self.y = self:nextCell(self.x, self.y)
+  Timer.tween(self.animationTime, {
     [self] = { actualX = BOARD_X + (self.x - 1) * CELL_SIZE, actualY = BOARD_Y + (self.y - 1) * CELL_SIZE }
   }):finish(function()
-    if callback then
-      callback()
-    end
+    self:move(steps - 1, callback)
   end)
 
-  return true
+  return self.x, self.y
 end
 
 function Goti:isBetween(a, x, y)
