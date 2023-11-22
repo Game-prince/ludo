@@ -42,36 +42,36 @@ function Goti:render()
 end
 
 function Goti:nextCell(x, y)
-  -- where x is decreasing
-  if (y == 9 and ((x > 1 and x <= 7) or (x > 9 and x <= 15))) or (y == 15 and x > 7) or (self.color == YELLOW and y == 8 and x < 15 and x > 9) then
-    x = x - 1
-
-    -- where y is decreasing
-    if (x == 1 and y > 7) or (x == 7 and ((y > 1 and y <= 7) or (y > 9 and y <= 15))) or (self.color == BLUE and x == 8 and y < 15 and y > 9) then
-      y = y - 1
-
-      -- where y is increasing
-    elseif (x == 15 and y < 9) or (x == 9 and ((y >= 1 and y < 7) or (y >= 9 and y < 15))) or (self.color == GREEN and x == 8 and y > 1 and y < 7) then
-      y = y + 1
-    end
-
-    -- where x is increasing
-  elseif (y == 7 and ((x >= 1 and x < 7) or (x >= 9 and x < 15))) or (y == 1 and x < 9) or (self.color == RED and y == 8 and x > 1 and x < 7) then
-    x = x + 1
-
-    -- where y is decreasing
-    if (x == 1 and y > 7) or (x == 7 and ((y > 1 and y <= 7) or (y > 9 and y <= 15))) or (self.color == BLUE and x == 8 and y < 15 and y > 9) then
-      y = y - 1
-
-      -- where y is increasing
-    elseif (x == 15 and y < 9) or (x == 9 and ((y >= 1 and y < 7) or (y >= 9 and y < 15))) or (self.color == GREEN and x == 8 and y > 1 and y < 7) then
-      y = y + 1
-    end
+  -- increasing x
+  if (self:isBetween(x, 1, 5) and y == 7) or (self:isBetween(x, 10, 14) and y == 7) or (self:isBetween(x, 7, 8) and y == 1) or (self.color == RED and self:isBetween(x, 1, 6) and y == 8) then
+    return x + 1, y
   end
 
+  -- decreasing x
+  if (self:isBetween(x, 2, 6) and y == 9) or (self:isBetween(x, 11, 15) and y == 9) or (self:isBetween(x, 8, 9) and y == 15) or (self.color == YELLOW and self:isBetween(x, 10, 15) and y == 8) then
+    return x - 1, y
+  end
 
+  -- increasing y
+  if (self:isBetween(y, 1, 5) and x == 9) or (self:isBetween(y, 10, 14) and x == 9) or (self:isBetween(y, 7, 8) and x == 15) or (self.color == GREEN and self:isBetween(y, 1, 6) and x == 8) then
+    return x, y + 1
+  end
 
-  return x, y
+  -- decreasing y
+  if (self:isBetween(y, 2, 6) and x == 7) or (self:isBetween(y, 11, 15) and x == 7) or (self:isBetween(y, 8, 9) and x == 1) or (self.color == BLUE and self:isBetween(y, 10, 15) and x == 8) then
+    return x, y - 1
+  end
+
+  -- corner cases
+  if x == 6 and y == 7 then
+    return x + 1, y - 1
+  elseif x == 7 and y == 10 then
+    return x - 1, y - 1
+  elseif x == 9 and y == 6 then
+    return x + 1, y + 1
+  elseif x == 10 and y == 9 then
+    return x - 1, y + 1
+  end
 end
 
 function Goti:canMoveUpto(steps)
@@ -127,4 +127,12 @@ function Goti:move(steps, callback)
   end)
 
   return true
+end
+
+function Goti:isBetween(a, x, y)
+  if a >= x and a <= y then
+    return true
+  end
+
+  return false
 end
