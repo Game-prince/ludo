@@ -115,7 +115,9 @@ end
 
 function Goti:move(steps, callback)
   if steps == 0 then
-    callback()
+    if callback then
+      callback()
+    end
     return self.x, self.y
   end
 
@@ -133,6 +135,7 @@ function Goti:move(steps, callback)
     return self.x, self.y
   end
 
+
   self.x, self.y = self:nextCell(self.x, self.y)
   Timer.tween(self.animationTime, {
     [self] = { actualX = BOARD_X + (self.x - 1) * CELL_SIZE, actualY = BOARD_Y + (self.y - 1) * CELL_SIZE }
@@ -144,7 +147,12 @@ function Goti:move(steps, callback)
     self:move(steps - 1, callback)
   end)
 
-  return self.x, self.y
+  local finalX, finalY = self.x, self.y
+  for i = 1, steps - 1 do
+    finalX, finalY = self:nextCell(finalX, finalY)
+  end
+
+  return finalX, finalY
 end
 
 function Goti:isBetween(a, x, y)

@@ -24,6 +24,9 @@ function PlayState:init()
   self.arrow = ArrowAnimated {
     x = self.dice.x, y = self.dice.y, interval = 0.5, direction = 'left'
   }
+
+  self.isNil = false
+  self.prevX, self.prevY = -1, -1
 end
 
 function PlayState:render()
@@ -37,6 +40,16 @@ function PlayState:render()
   -- player turn
   if self.players[self.turn].canRoll then
     self.arrow:render()
+  end
+
+  -- is nil
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setFont(gFonts['large'])
+  love.graphics.printf(self.prevX .. " " .. self.prevY, 0, VIRTUAL_HEIGHT - 200, VIRTUAL_WIDTH, 'center')
+  if self.isNil then
+    love.graphics.printf('NIL', 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, 'center')
+  else
+    love.graphics.printf('NOT NIL', 0, VIRTUAL_HEIGHT - 100, VIRTUAL_WIDTH, 'center')
   end
 end
 
@@ -110,22 +123,39 @@ function PlayState:handleLeftMouseClick()
 
 
       -- move cell
-      local newX, newY = cell:moveGoti(color, value, function()
-        self.players[self.turn].canMove = false
-        for _, goti in ipairs(self.players[self.turn].gotis) do
-          goti.canMove = false
-        end
-        if not (self.dice.value == 6) then
-          self.turn = self.turn + 1 > 4 and 1 or self.turn + 1
-        end
-        self.players[self.turn].canRoll = true
-      end)
+      local newX, newY = nil, nil
+      Chain(
+        function(go)
+          newX, newY = cell:moveGoti(color, value, function()
+            self.players[self.turn].canMove = false
+            for _, goti in ipairs(self.players[self.turn].gotis) do
+              goti.canMove = false
+            end
+            if not (self.dice.value == 6) then
+              self.turn = self.turn + 1 > 4 and 1 or self.turn + 1
+            end
+            self.players[self.turn].canRoll = true
+          end)
+          Timer.after(value * 0.2, go)
+        end,
+        function(go)
+          if newX == nil or newY == nil then
+            self.isNil = true
+            return
+          end
 
-      -- handle goti killing
-      local newCell = self.board.board[newY][newX]
-      if newCell.type == NORMAL then
-        newCell:handleGotiKilling(color)
-      end
+          self.isNil = false
+          self.prevX, self.prevY = newX, newY
+
+          -- handle goti killing
+          local newCell = self.board.board[newY][newX]
+          if newCell.type == NORMAL then
+            newCell:handleGotiKilling(color)
+          end
+
+          Timer.after(0.1, go)
+        end
+      )()
     end
   else
     self.wrongCell = true
