@@ -54,6 +54,13 @@ function PlayState:render()
 end
 
 function PlayState:update(dt)
+  -- checking if the player has won
+  if self.players[self.turn]:hasWon() then
+    gStateStack:change('win', {
+      winner = self.players[self.turn].color
+    })
+  end
+
   -- updating arrow
   self.arrow.x = self.dice.x
   self.arrow.y = self.dice.y

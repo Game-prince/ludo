@@ -168,3 +168,10 @@ GotiBirthHomeData = {
   [YELLOW] = { x = 14, y = 9 },
   [BLUE] = { x = 7, y = 14 }
 }
+
+GotiWinPosition = {
+  [RED] = { x = 7, y = 8 },
+  [GREEN] = { x = 8, y = 7 },
+  [YELLOW] = { x = 9, y = 8 },
+  [BLUE] = { x = 8, y = 9 }
+}

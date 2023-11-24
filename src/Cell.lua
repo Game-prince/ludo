@@ -38,6 +38,9 @@ function Cell:moveGoti(color, value, callback)
     return self.x, self.y
   else
     local newX, newY = movableGotis[1]:move(value, callback)
+    if movableGotis[1].x == GotiWinPosition[color].x and movableGotis[1].y == GotiWinPosition[color].y then
+      movableGotis[1].hasWon = true
+    end
     return newX, newY
   end
 end

@@ -47,3 +47,14 @@ function Player:whichGotisCanMove(steps)
 
   return count
 end
+
+function Player:hasWon()
+  local count = 0
+  for _, goti in ipairs(self.gotis) do
+    if goti.hasWon then
+      count = count + 1
+    end
+  end
+
+  return count == 4
+end

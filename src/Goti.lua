@@ -9,6 +9,7 @@ function Goti:init(def)
   self.startY = self.y
 
   self.alive = false
+  self.hasWon = false
 
   self.canMove = false
   self.mul = 0.2
@@ -68,22 +69,22 @@ end
 
 function Goti:nextCell(x, y)
   -- increasing x
-  if (self:isBetween(x, 1, 5) and y == 7) or (self:isBetween(x, 10, 14) and y == 7) or (self:isBetween(x, 7, 8) and y == 1) or (self.color == RED and self:isBetween(x, 1, 6) and y == 8) then
+  if (self:isBetween(x, 1, 5) and y == 7) or (self:isBetween(x, 10, 14) and y == 7) or ((not self.color == GREEN) and self:isBetween(x, 7, 8) and y == 1) or (self.color == RED and self:isBetween(x, 1, 6) and y == 8) then
     return x + 1, y
   end
 
   -- decreasing x
-  if (self:isBetween(x, 2, 6) and y == 9) or (self:isBetween(x, 11, 15) and y == 9) or (self:isBetween(x, 8, 9) and y == 15) or (self.color == YELLOW and self:isBetween(x, 10, 15) and y == 8) then
+  if (self:isBetween(x, 2, 6) and y == 9) or (self:isBetween(x, 11, 15) and y == 9) or ((not self.color == BLUE) and self:isBetween(x, 8, 9) and y == 15) or (self.color == YELLOW and self:isBetween(x, 10, 15) and y == 8) then
     return x - 1, y
   end
 
   -- increasing y
-  if (self:isBetween(y, 1, 5) and x == 9) or (self:isBetween(y, 10, 14) and x == 9) or (self:isBetween(y, 7, 8) and x == 15) or (self.color == GREEN and self:isBetween(y, 1, 6) and x == 8) then
+  if (self:isBetween(y, 1, 5) and x == 9) or (self:isBetween(y, 10, 14) and x == 9) or ((not self.color == YELLOW) and self:isBetween(y, 7, 8) and x == 15) or (self.color == GREEN and self:isBetween(y, 1, 6) and x == 8) then
     return x, y + 1
   end
 
   -- decreasing y
-  if (self:isBetween(y, 2, 6) and x == 7) or (self:isBetween(y, 11, 15) and x == 7) or (self:isBetween(y, 8, 9) and x == 1) or (self.color == BLUE and self:isBetween(y, 10, 15) and x == 8) then
+  if (self:isBetween(y, 2, 6) and x == 7) or (self:isBetween(y, 11, 15) and x == 7) or ((not self.color == RED) and self:isBetween(y, 8, 9) and x == 1) or (self.color == BLUE and self:isBetween(y, 10, 15) and x == 8) then
     return x, y - 1
   end
 
